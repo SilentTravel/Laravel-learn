@@ -7,6 +7,7 @@ use App\Validators\PasswordValidator;
 use App\Validators\UsernameValidator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Passport\Passport;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +40,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerValidators();
+
+        // 注册任何认证/授权服务
+        Passport::routes();
+
+        // Token令牌有效期 1天
+        Passport::tokensExpireIn(now()->addDays(1));
     }
 
     /**

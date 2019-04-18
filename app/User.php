@@ -5,9 +5,12 @@ namespace App;
 use App\Exceptions\UserException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Passport\HasApiTokens;
 
 class User extends Authenticatable
 {
+    use HasApiTokens;
+
     /**
      * 敏感字段
      */
@@ -93,6 +96,16 @@ class User extends Authenticatable
      */
     public static function isEmailExists(string $email)
     {
-        return self::where('email', '=', $email)->exists();
+        return self::where('email', $email)->exists();
+    }
+
+    /**
+     * Passport扩展字段查询(email,phone)
+     * @param $username
+     * @return mixed
+     */
+    public function findForPassport($username)
+    {
+        return $this->orWhere('email', $username)->orWhere('phone', $username)->first();
     }
 }
