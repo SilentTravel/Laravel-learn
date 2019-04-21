@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Api\RegisterRequest;
 use App\User;
-use http\Env\Request;
+use Illuminate\Support\Facades\Cache;
 
 
-class UsersController extends BaseController
+class AuthController extends BaseController
 {
     /**
      * 用户注册
@@ -19,9 +19,12 @@ class UsersController extends BaseController
         User::create([
             'username' => $request->get('username'),
             'email' => $request->get('email'),
+            'phone' => $request->get('phone'),
             // 加密密码
-            'password' => bcrypt($request->get('password')),
+            'password' => bcrypt($request->get('password'))
         ]);
+        // 清除验证码缓存
+        Cache::forget($request->get('salt_key'));
         return $this->success('注册成功', [], 201);
     }
 

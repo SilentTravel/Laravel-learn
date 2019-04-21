@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Response;
 
 class BaseController extends Controller
 {
@@ -17,12 +16,14 @@ class BaseController extends Controller
     protected function success($msg = '操作成功', $data = [], $httpCode = 200)
     {
         if (!empty($data)) {
-            return Response()->json([
-                'msg' => $msg,
-                'error_code' => 0,
-                'data' => $data,
-                'request_time' => time()
-            ], $httpCode);
+            $list = [
+                'code' => 1,
+                'data' => [
+                    'key' => 123,
+                    'op' => 6
+                ]
+            ];
+            return \Illuminate\Support\Facades\Response::json($list);
         } else {
             return Response()->json([
                 'msg' => $msg,

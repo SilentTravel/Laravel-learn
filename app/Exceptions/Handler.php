@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
+use Overtrue\EasySms\Exceptions\GatewayErrorException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -73,7 +74,10 @@ class Handler extends ExceptionHandler
                 '获取数据不存在', 902);
         } else if ($exception instanceof HttpException) {
             $this->setResponseContent(400,
-                $exception->getMessage(), 1001);
+                '访问方式错误', 1001);
+        } else if ($exception instanceof GatewayErrorException) {
+            $this->setResponseContent(400,
+                $exception->getMessage(), 1000);
         } else {
             if (config('app.debug')) {
                 return parent::render($request, $exception);
